@@ -8,7 +8,6 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import q.q.bean.AuthAppAccessToken;
@@ -111,10 +110,10 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     public RespPermScope getPermScope() throws AuthHttpException {
         String reqPath = "authorization/corp/dep/get/scope";
         String baseUrl = authConfig.getBaseUrl();
-        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        String url = StrUtil.format("{}{}", baseUrl, reqPath);
         ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
                 .build();
-        String  result= httpPostWithParam(url, reqUserAndDeptParam, true);
+        String result = httpPostWithParam(url, reqUserAndDeptParam, true);
         HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
         String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
         RespPermScope respPermScope = AuthGsonBuilder.create().fromJson(toJson, RespPermScope.class);
@@ -125,7 +124,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     public RespAllChildDept getAllChildDept(String thirdDepId) throws AuthHttpException {
         String reqPath = "authorization/corp/dep/get/subId";
         String baseUrl = authConfig.getBaseUrl();
-        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        String url = StrUtil.format("{}{}", baseUrl, reqPath);
         ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
                 .thirdDepId(thirdDepId)
                 .build();
@@ -140,14 +139,15 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     public List<RespDeptDetail> getDeptDetail(List<String> thirdDepIdList) throws AuthHttpException {
         String reqPath = "authorization/corp/dep/get/detail";
         String baseUrl = authConfig.getBaseUrl();
-        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        String url = StrUtil.format("{}{}", baseUrl, reqPath);
         ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
                 .thirdDepIdList(thirdDepIdList)
                 .build();
         String result = httpPostWithParam(url, reqUserAndDeptParam, true);
         HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
         String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
-        List<RespDeptDetail> respDeptDetailList=AuthGsonBuilder.create().fromJson(toJson,new TypeToken<List<RespDeptDetail>>(){}.getType());
+        List<RespDeptDetail> respDeptDetailList = AuthGsonBuilder.create().fromJson(toJson, new TypeToken<List<RespDeptDetail>>() {
+        }.getType());
         return respDeptDetailList;
     }
 
@@ -155,7 +155,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     public RespDeptMember getRespDeptMember(String thirdDepId, boolean fetchChild) throws AuthHttpException {
         String reqPath = "authorization/corp/dep/user/list";
         String baseUrl = authConfig.getBaseUrl();
-        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        String url = StrUtil.format("{}{}", baseUrl, reqPath);
         ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
                 .thirdDepId(thirdDepId)
                 .fetch(fetchChild)
@@ -171,7 +171,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     public List<RespUserDetail> getRespUserDetail(List<String> thirdUserIdList) throws AuthHttpException {
         String reqPath = "authorization/corp/dep/user/detail";
         String baseUrl = authConfig.getBaseUrl();
-        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        String url = StrUtil.format("{}{}", baseUrl, reqPath);
         ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
                 .thirdUserIdList(thirdUserIdList)
                 .build();
@@ -258,15 +258,24 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
                 httpRequest.setProxy(authConfig.getProxy());
             }
             if (needAccessToken) {
-                headers.put("Authorization", authConfig.getAccessToken());
+                headers.put("Authorization", getToken());
                 httpRequest.addHeaders(headers);
             }
             String body = httpRequest.execute().body();
             return body;
-        } catch (HttpException e) {
+        } catch (HttpException | AuthHttpException e) {
             log.error("HTTP请求异常,请求地址为:{},请求参数:{},请求的header为:{}", postUrl, postBody, AuthGsonBuilder.create().toJson(headers));
             throw new RuntimeException(e);
         }
+    }
+
+    private String getToken() throws AuthHttpException {
+        String accessToken = authConfig.getAccessToken();
+        if (authConfig.isAccessTokenExpired()) {
+            return accessToken;
+        }
+        String findAccessToken = getAccessToken(true);
+        return findAccessToken;
     }
 
 
