@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RespDeptMember implements Serializable {
-    @SerializedName("thirdUserId")
+    @SerializedName("thirdUserIds")
     @Expose
-    public List<String> thirdUserId;
+    public List<String> thirdUserIds;
 }
