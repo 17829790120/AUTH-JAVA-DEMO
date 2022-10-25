@@ -8,8 +8,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import q.q.bean.AuthAppAccessToken;
 import q.q.bean.response.HttpResultBean;
 import q.q.bean.response.ResAuthCodeUserInfo;
@@ -35,10 +34,9 @@ import java.util.concurrent.locks.Lock;
  * @author shawn
  * @since 2022/10/25 11:51
  */
+@Slf4j
 public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
 
-
-    private final Logger log = LoggerFactory.getLogger(AuthHttpSupportServiceImpl.class);
 
     private AuthConfig authConfig;
 
@@ -187,6 +185,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
         try {
             return retryer.call(httpWxWork);
         } catch (ExecutionException | RetryException e) {
+
             // 执行异常
             e.printStackTrace();
             throw new AuthHttpException(-1, "请求第三方接口异常");
@@ -198,19 +197,20 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
      * 企业微信post请求
      */
     private String doHttpPost(String postUrl, String postBody, boolean needAccessToken) {
+        Map<String, String> headers = new LinkedHashMap<>();
         try {
             HttpRequest httpRequest = HttpRequest.post(postUrl).body(postBody).timeout(6000);
             if (authConfig.getProxy() != null) {
                 httpRequest.setProxy(authConfig.getProxy());
             }
             if (needAccessToken) {
-                Map<String, String> headers = new LinkedHashMap<>();
                 headers.put("Authorization", authConfig.getAccessToken());
                 httpRequest.addHeaders(headers);
             }
             String body = httpRequest.execute().body();
             return body;
         } catch (HttpException e) {
+            log.error("HTTP请求异常,请求地址为:{},请求参数:{},请求的header为:{}", postUrl, postBody, AuthGsonBuilder.create().toJson(headers));
             throw new RuntimeException(e);
         }
     }
