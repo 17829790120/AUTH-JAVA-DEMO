@@ -169,8 +169,8 @@ public class AuthDefaultConfigImpl implements AuthConfig {
         return appId;
     }
 
-    public void setAppId(String appid) {
-        this.appId = appid;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
 
