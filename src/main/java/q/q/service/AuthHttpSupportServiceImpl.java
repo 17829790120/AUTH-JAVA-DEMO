@@ -8,8 +8,11 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import q.q.bean.AuthAppAccessToken;
+import q.q.bean.request.ReqUserAndDeptParam;
 import q.q.bean.response.HttpResultBean;
 import q.q.bean.response.ResAuthCodeUserInfo;
 import q.q.bean.response.RespAllChildDept;
@@ -106,27 +109,78 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
 
     @Override
     public RespPermScope getPermScope() throws AuthHttpException {
-        return null;
+        String reqPath = "authorization/corp/dep/get/scope";
+        String baseUrl = authConfig.getBaseUrl();
+        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
+                .build();
+        String  result= httpPostWithParam(url, reqUserAndDeptParam, true);
+        HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
+        String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
+        RespPermScope respPermScope = AuthGsonBuilder.create().fromJson(toJson, RespPermScope.class);
+        return respPermScope;
     }
 
     @Override
     public RespAllChildDept getAllChildDept(String thirdDepId) throws AuthHttpException {
-        return null;
+        String reqPath = "authorization/corp/dep/get/subId";
+        String baseUrl = authConfig.getBaseUrl();
+        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
+                .thirdDepId(thirdDepId)
+                .build();
+        String result = httpPostWithParam(url, reqUserAndDeptParam, true);
+        HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
+        String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
+        RespAllChildDept respAllChildDept = AuthGsonBuilder.create().fromJson(toJson, RespAllChildDept.class);
+        return respAllChildDept;
     }
 
     @Override
     public List<RespDeptDetail> getDeptDetail(List<String> thirdDepIdList) throws AuthHttpException {
-        return null;
+        String reqPath = "authorization/corp/dep/get/detail";
+        String baseUrl = authConfig.getBaseUrl();
+        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
+                .thirdDepIdList(thirdDepIdList)
+                .build();
+        String result = httpPostWithParam(url, reqUserAndDeptParam, true);
+        HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
+        String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
+        List<RespDeptDetail> respDeptDetailList=AuthGsonBuilder.create().fromJson(toJson,new TypeToken<List<RespDeptDetail>>(){}.getType());
+        return respDeptDetailList;
     }
 
     @Override
     public RespDeptMember getRespDeptMember(String thirdDepId, boolean fetchChild) throws AuthHttpException {
-        return null;
+        String reqPath = "authorization/corp/dep/user/list";
+        String baseUrl = authConfig.getBaseUrl();
+        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
+                .thirdDepId(thirdDepId)
+                .fetch(fetchChild)
+                .build();
+        String result = httpPostWithParam(url, reqUserAndDeptParam, true);
+        HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
+        String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
+        RespDeptMember respDeptMember = AuthGsonBuilder.create().fromJson(toJson, RespDeptMember.class);
+        return respDeptMember;
     }
 
     @Override
     public List<RespUserDetail> getRespUserDetail(List<String> thirdUserIdList) throws AuthHttpException {
-        return null;
+        String reqPath = "authorization/corp/dep/user/detail";
+        String baseUrl = authConfig.getBaseUrl();
+        String url=StrUtil.format("{}{}",baseUrl,reqPath);
+        ReqUserAndDeptParam reqUserAndDeptParam = ReqUserAndDeptParam.builder()
+                .thirdUserIdList(thirdUserIdList)
+                .build();
+        String result = httpPostWithParam(url, reqUserAndDeptParam, true);
+        HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
+        String toJson = AuthGsonBuilder.create().toJson(httpResultBean.getResultObject());
+        List<RespUserDetail> respUserDetailList = AuthGsonBuilder.create().fromJson(toJson, new TypeToken<List<RespUserDetail>>() {
+        }.getType());
+        return respUserDetailList;
     }
 
 
@@ -147,9 +201,9 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
 
     private String extractResultObject(String result) throws AuthHttpException {
         HttpResultBean httpResultBean = HttpResultBean.fromJson(result);
-        int code = httpResultBean.getCode();
+        int code = httpResultBean.getStatus();
         if (code != 0) {
-            throw new AuthHttpException(code, httpResultBean.getMsg());
+            throw new AuthHttpException(code, httpResultBean.getInfo());
         }
         Object resultObject = httpResultBean.getResultObject();
         String toJson = AuthGsonBuilder.create().toJson(resultObject);

@@ -15,26 +15,26 @@ import java.io.Serializable;
 public class HttpResultBean implements Serializable {
 
     private static final long serialVersionUID = 4311259181040453502L;
-    private int code;
+    private int status;
 
-    private String msg;
+    private String info;
 
     private Object resultObject;
 
-    public HttpResultBean(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    public HttpResultBean(int status, String info) {
+        this.status = status;
+        this.info = info;
     }
 
-    public HttpResultBean(int code) {
-        this.code = code;
-        this.msg = "SUCCESS";
+    public HttpResultBean(int status) {
+        this.status = status;
+        this.info = "SUCCESS";
     }
 
     public static HttpResultBean successOf(Object object) {
         HttpResultBean build = HttpResultBean.builder()
                 .resultObject(object)
-                .code(0)
+                .status(0)
                 .build();
         return build;
     }
