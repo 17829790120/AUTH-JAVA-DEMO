@@ -231,7 +231,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
         Map<String, String> param = new LinkedHashMap<>();
         param.put("appId", authConfig.getAppId());
         param.put("appSecret", authConfig.getSecret());
-        String requestUrl = StrUtil.format("{}/auth/get/accessToken", authConfig.getBaseUrl());
+        String requestUrl = StrUtil.format("{}/auth/server/get/accessToken", authConfig.getBaseUrl());
         String tokenResult = httpPostWithParam(requestUrl, param, false);
         return tokenResult;
     }

@@ -1,10 +1,6 @@
 package q.q.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import q.q.bean.response.*;
 import q.q.exception.AuthHttpException;
-
-import java.util.List;
 
 /**
  * 类说明
@@ -15,10 +11,10 @@ import java.util.List;
 public class Demo {
 
     public static void main(String[] args) throws AuthHttpException {
-        AuthConfig authConfig = new AuthDefaultConfigImpl("", "", "127.0.0.1:8080/");
+        AuthConfig authConfig = new AuthDefaultConfigImpl("uda_635796b1284a9464114b1532", "9r3ix88lizjac812finrgg6pjszxs5mp4mu", "https://api.dev.161.54188.online/apaas/sso");
         AuthHttpSupportService authHttpSupportService = AuthHttpServiceManager.getAuthHttpSupportService(authConfig);
-        List<RespUserDetail> respUserDetail = authHttpSupportService.getRespUserDetail(CollectionUtil.newArrayList("128"));
-        System.out.println(respUserDetail);
+        String accessToken = authHttpSupportService.getAccessToken();
+        System.out.println(accessToken);
 
     }
 }
