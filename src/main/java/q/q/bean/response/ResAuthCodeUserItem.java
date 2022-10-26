@@ -27,9 +27,9 @@ public class ResAuthCodeUserItem implements Serializable {
     @SerializedName("userId")
     @Expose
     private Integer userId;
-    @SerializedName("username")
+    @SerializedName("userName")
     @Expose
-    private String username;
+    private String userName;
     @SerializedName("telephone")
     @Expose
     private String telephone;
