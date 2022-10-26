@@ -285,7 +285,7 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
 
     private String getToken() throws AuthHttpException {
         String accessToken = authConfig.getAccessToken();
-        if (authConfig.isAccessTokenExpired()) {
+        if (!authConfig.isAccessTokenExpired()) {
             return accessToken;
         }
         String findAccessToken = getAccessToken(true);
