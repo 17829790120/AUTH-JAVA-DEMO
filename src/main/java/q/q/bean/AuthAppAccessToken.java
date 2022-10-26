@@ -17,7 +17,7 @@ public class AuthAppAccessToken implements Serializable {
 
     private String accessToken;
 
-    private int expiresIn = -1;
+    private int expireIn = -1;
 
     public static AuthAppAccessToken fromJson(String json) {
         return AuthGsonBuilder.create().fromJson(json, AuthAppAccessToken.class);

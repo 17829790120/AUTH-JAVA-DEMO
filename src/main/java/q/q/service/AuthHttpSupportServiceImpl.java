@@ -207,7 +207,8 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
     private String extractAccessToken(String resultContent) throws AuthHttpException {
         AuthConfig config = this.getAuthConfig();
         AuthAppAccessToken authAppAccessToken = AuthAppAccessToken.fromJson(resultContent);
-        config.updateAccessToken(authAppAccessToken.getAccessToken(), authAppAccessToken.getExpiresIn());
+        int expiresIn = authAppAccessToken.getExpireIn();
+        config.updateAccessToken(authAppAccessToken.getAccessToken(), expiresIn);
         return authAppAccessToken.getAccessToken();
     }
 

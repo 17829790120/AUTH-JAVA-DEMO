@@ -185,7 +185,7 @@ public class AuthDefaultConfigImpl implements AuthConfig {
 
     @Override
     public synchronized void updateAccessToken(AuthAppAccessToken accessToken) {
-        updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+        updateAccessToken(accessToken.getAccessToken(), accessToken.getExpireIn());
     }
 
 
