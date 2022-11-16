@@ -129,6 +129,20 @@ public class AuthHttpSupportServiceImpl implements AuthHttpSupportService {
         return oathUrl;
     }
 
+
+    @Override
+    public String getLogoutUrl(String redirectUrl, String state) throws AuthHttpException {
+        Map<String, String> param = new LinkedHashMap<>();
+        param.put("appId", authConfig.getAppId());
+        param.put("redirectUrl", redirectUrl);
+        param.put("state", state);
+        String requestUrl = StrUtil.format("{}/auth/server/get/logout", authConfig.getBaseUrl());
+        String oathUrlResult = httpPostWithParam(requestUrl, param, false);
+        JSONObject jsonObject = JSONUtil.parseObj(oathUrlResult);
+        String oathUrl = jsonObject.get("logoutUrl").toString();
+        return oathUrl;
+    }
+
     @Override
     public RespPermScope getPermScope() throws AuthHttpException {
         String reqPath = "/corp/dep/get/scope";

@@ -74,6 +74,11 @@ public interface AuthHttpSupportService {
      */
     String getLogoutUrl() throws AuthHttpException;
 
+    /**
+     * 获取登出地址信息
+     */
+    String getLogoutUrl(String redirectUrl, String state) throws AuthHttpException;
+
     /////////////////////////////////////组织架构关联接口////////////////////////////////
 
     /**
