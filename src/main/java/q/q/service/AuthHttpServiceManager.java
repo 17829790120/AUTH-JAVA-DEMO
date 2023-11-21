@@ -19,7 +19,7 @@ public class AuthHttpServiceManager {
      * 获取调用的service信息
      */
     public static AuthHttpSupportService getAuthHttpSupportService(AuthConfig authConfig) {
-        AuthHttpSupportService authHttpSupportService = getAuthHttpSupportService(authConfig, false);
+        AuthHttpSupportService authHttpSupportService = AuthHttpServiceManager.getAuthHttpSupportService(authConfig);
         return authHttpSupportService;
     }
 

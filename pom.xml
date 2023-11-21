@@ -6,7 +6,7 @@
 
     <groupId>q.q</groupId>
     <artifactId>Auth-Tool</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.3.RELEASE</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -101,19 +101,7 @@
             </plugin>
         </plugins>
     </build>
-    <!--发布-->
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>Releases</name>
-            <url>http://192.168.50.163:18081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Snapshot</name>
-            <url>http://192.168.50.163:18081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement> <!--上传source.jar 非必须 -->
+
 
 
     <profiles>

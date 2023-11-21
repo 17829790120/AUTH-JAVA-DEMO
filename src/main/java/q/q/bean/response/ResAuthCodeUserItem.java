@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
- * 类说明
+ * 查询返回的用户信息
  *
  * @author shawn
  * @since 2022/10/22 15:25
@@ -31,6 +32,9 @@ public class ResAuthCodeUserItem implements Serializable {
     @SerializedName("userName")
     @Expose
     private String userName;
+    @SerializedName("email")
+    @Expose
+    private String email;
     @SerializedName("loginAccount")
     @Expose
     private String loginAccount;
@@ -46,5 +50,12 @@ public class ResAuthCodeUserItem implements Serializable {
     @SerializedName("extraInfo")
     @Expose
     private Map<String, String> extraInfo;
+
+    @Expose
+    private List<DepItem> depItemList;
+
+    @SerializedName("roleItemList")
+    @Expose
+    private List<RoleItem> roleItemList;
 }
     

@@ -12,17 +12,25 @@ import java.util.Map;
  * @since 2022/10/25 17:39
  */
 public class Demo {
+    private static String appId = "uda_637b3b8ce4b07197c6d2307f";
+
+    private static String screct = "z1z1fhcksx0nyj3zyf190kt671p8dzz7qw4";
+    /**
+     * apaas/sso前面的域名根据客户服务器进行获取
+     */
+    private static String baseUrl = "https://dev-cloud.qimaiit.com/apaas/authorization";
 
     public static void main(String[] args) throws AuthHttpException {
-        AuthConfig authConfig = new AuthDefaultConfigImpl("uda_635796b1284a9464114b1532", "9r3ix88lizjac812finrgg6pjszxs5mp4mu", "https://api.dev.161.54188.online/apaas/sso");
+
+        AuthConfig authConfig = new AuthDefaultConfigImpl(appId, screct, baseUrl);
         AuthHttpSupportService authHttpSupportService = AuthHttpServiceManager.getAuthHttpSupportService(authConfig);
 
-        String accessToken = authHttpSupportService.getAccessToken();
+        String accessToken = authHttpSupportService.getAuthUrl("123", "234");
         String accessToken2 = authHttpSupportService.getAccessToken();
         System.out.println(accessToken);
         System.out.println(accessToken2);
 
-    
+
         Map map = new HashMap();
         for (Object o : map.entrySet()) {
             Map.Entry entry = (Map.Entry) o;

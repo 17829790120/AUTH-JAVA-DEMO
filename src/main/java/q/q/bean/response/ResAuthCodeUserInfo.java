@@ -26,12 +26,17 @@ import java.io.Serializable;
 public class ResAuthCodeUserInfo implements Serializable {
 
     /**
-     *
+     * YES 用户存在  NO 用户不存在
      */
     @SerializedName("hasUser")
     @Expose
     private String hasUser;
-
+    /**
+     * 重定向的URL
+     */
+    @SerializedName("redirectURL")
+    @Expose
+    private String redirectURL;
     @SerializedName("userId")
     @Expose
     private Integer userId;
